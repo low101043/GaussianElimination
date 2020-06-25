@@ -17,14 +17,14 @@ public class Matrix {
 		// this.print();
 
 	}
-	
-	
+
 	public Matrix(int[][] data) {
 		this.matrix = data;
 		this.row = data.length;
 		this.col = data[0].length;
-		
+
 	}
+
 	public void print() {
 
 		for (int i = 0; i < matrix.length; i++) {
@@ -84,9 +84,9 @@ public class Matrix {
 
 		return row;
 	}
-	
+
 	public int data(int rowData, int colData) {
-		
+
 		return matrix[rowData][colData];
 	}
 

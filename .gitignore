@@ -3,3 +3,4 @@ src/com/*
 .classpath
 .project
 .settings/
+src/test/*
