@@ -6,10 +6,11 @@ import java.util.Arrays;
 import org.apache.log4j.Logger;
 
 import com.natlowis.gauss.exceptions.GCDException;
+import com.natlowis.gauss.exceptions.NoSolutionException;
 
-public class GuassianElimination implements GuassianEliminationInterface {
+public class GaussianElimination implements GaussianEliminationInterface {
 
-	private static final Logger logger = Logger.getLogger(GuassianElimination.class);
+	private static final Logger logger = Logger.getLogger(GaussianElimination.class);
 
 	@Override
 	public int GCD(int[] integers) throws GCDException {
@@ -25,16 +26,34 @@ public class GuassianElimination implements GuassianEliminationInterface {
 	}
 
 	@Override
-	public Matrix GuassianElim(Matrix data) {
+	public Matrix GuassianElim(Matrix data) throws NoSolutionException {
 		// TODO Auto-generated method stub
 		Matrix goneDown = GuassianElimDown(data, 0, 0);
 		return GuassianElimUp(goneDown, goneDown.rows() - 1, goneDown.columns() - 2);
 	}
 
-	public Matrix GuassianElimDown(Matrix data, int line, int col) {
+	public Matrix GuassianElimDown(Matrix data, int line, int col) throws NoSolutionException {
 		// TODO Auto-generated method stub
 		if (line + 1 == data.rows()) {
-			return data;
+			int[] dataForRow = data.row(line);
+			int b = dataForRow[dataForRow.length - 1];
+			if (b == 0) {
+				//TODO This is for Special CaSE 2
+				return data;}
+			else {
+				Boolean allZero = true; 
+				for (int i = 0; i < dataForRow.length - 1; i++) {
+					if (dataForRow[i] != 0) {
+						allZero = false;
+					}
+				}
+				if (allZero) {
+					throw new NoSolutionException();
+				}
+				else {
+					return data;
+				}
+			}
 		} else {
 			int initialData = data.data(line, col);
 			// logger.trace(initialData);

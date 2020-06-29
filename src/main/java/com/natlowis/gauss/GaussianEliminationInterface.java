@@ -1,12 +1,13 @@
 package com.natlowis.gauss;
 
 import com.natlowis.gauss.exceptions.GCDException;
+import com.natlowis.gauss.exceptions.NoSolutionException;
 
-public interface GuassianEliminationInterface {
+public interface GaussianEliminationInterface {
 
 	public int GCD(int[] integers) throws GCDException;
 
-	public Matrix GuassianElim(Matrix data);
+	public Matrix GuassianElim(Matrix data) throws NoSolutionException;
 
 	public String matrixToVariable(Matrix data);
 }
