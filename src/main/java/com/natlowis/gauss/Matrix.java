@@ -90,4 +90,19 @@ public class Matrix {
 		return matrix[rowData][colData];
 	}
 
+	public Matrix deepCopy() {
+
+		Matrix deepCopy = new Matrix(row, col);
+		for (int i = 0; i < matrix.length; i++) {
+			int[] row = matrix[i];
+
+			for (int j = 0; j < row.length; j++) {
+				int data = matrix[i][j];
+				deepCopy.add(i, j, data);
+			}
+		}
+
+		return deepCopy;
+	}
+
 }

@@ -111,7 +111,7 @@ public class MatrixTest {
 						{-2,-1,-1,0}
 						};
 		Matrix a = new Matrix(data);
-		Matrix b = elim.GuassianElim(a);
+		Matrix b = elim.GaussianElim(a);
 		int[][] answer = {	
 							{1, 0,0,2},
 							{0,1,0,-3},
@@ -125,7 +125,7 @@ public class MatrixTest {
 						{3,-1,7,10}
 						};
 		Matrix c = new Matrix(data2);
-		Matrix d = elim.GuassianElim(c);
+		Matrix d = elim.GaussianElim(c);
 		int[][] answer2 = {
 							{6,0,0,1},
 							{0,-2,0,5},
@@ -142,7 +142,7 @@ public class MatrixTest {
 						{-2,1,-2,2}
 						};	
 		Matrix e = new Matrix(data3);
-		Matrix f = elim.GuassianElim(e);
+		Matrix f = elim.GaussianElim(e);
 		
 		int[][] answer3 = {
 							{1,0,0,2},
@@ -161,7 +161,7 @@ public class MatrixTest {
 						};
 		
 		Matrix g = new Matrix(data4);
-		Matrix h = elim.GuassianElim(g);
+		Matrix h = elim.GaussianElim(g);
 		
 		int[][] answer4 = {	
 							{1,0,0,0,0,1},
@@ -180,7 +180,7 @@ public class MatrixTest {
 						};
 		
 		Matrix i = new Matrix(data5);
-		Matrix j = elim.GuassianElim(i);
+		Matrix j = elim.GaussianElim(i);
 		
 		int[][] answer5 = {
 							{-1,0,0,1},
@@ -201,7 +201,7 @@ public class MatrixTest {
 		
 		
 		Matrix k = new Matrix(data6);
-		Matrix l = elim.GuassianElim(k);
+		Matrix l = elim.GaussianElim(k);
 		
 		int[][] answer6 = {
 							{6,0,0,0,0,-5},
@@ -226,7 +226,7 @@ public class MatrixTest {
 						};
 		
 		Matrix a = new Matrix(data1);
-		Matrix b = elim.GuassianElim(a);
+		Matrix b = elim.GaussianElim(a);
 		int[][] answer6 = {
 				{6,0,0,0,0,-5},
 				{0,3,0,0,0,-2},
@@ -247,7 +247,7 @@ public class MatrixTest {
 						{2,3,2,-1}
 						};
 		Matrix a = new Matrix(data1);
-		Matrix b = elim.GuassianElim(a);
+		Matrix b = elim.GaussianElim(a);
 		int[][] answer6 = {
 				{6,0,0,0,0,-5},
 				{0,3,0,0,0,-2},
@@ -256,5 +256,59 @@ public class MatrixTest {
 				{0,0,0,0,-6,1}
 				};
 		assertArrayEquals(answer6, b.matrix());
+	}
+	
+	@Test 
+	public void freely_choose_test() throws NoSolutionException {
+		GaussianEliminationInterface elim = new GaussianElimination();
+		
+		int[][] data1 = {
+						{-2,2,-1,4},
+						{3,2,2,-1},
+						{-1,-4,-1,-3}
+						};	
+		
+		Matrix a = new Matrix(data1);
+		Matrix b = elim.GaussianElim(a);
+		int[][] answer1 = {
+							{5,0,3,-5},
+							{0,10,1,10},
+							//{0,0,0,0}
+						 	};
+		
+		assertArrayEquals(answer1, b.matrix());
+		///////////////////////////////////////////////////////////
+		
+		int[][] data2 = {
+						{2,2,1,-1},
+						{1,1,3,2},
+						{-1,-1,2,3}
+						};
+		
+		Matrix c = new Matrix(data2);
+		Matrix d = elim.GaussianElim(c);
+		int[][] answer2 = {
+							{-1,-1,0,1},
+							{0,0,1,1},
+							//{0,0,0,0}
+							};
+		
+		assertArrayEquals(answer2, d.matrix());
+		/////////////////////////////////////////////////////////////
+		
+		int[][] data3 = {
+						{1,-1,0,2,3},
+						{2,0,2,1,4},
+						{3,-1,2,4,9}
+						};
+		Matrix e = new Matrix(data3);
+		Matrix f = elim.GaussianElim(e);
+		int[][] answer3 = {
+							{1,0,1,0,1},
+							{0,1,1,0,2},
+							{0,0,0,1,2}
+							};
+		
+		assertArrayEquals(answer3, f.matrix());
 	}
 }

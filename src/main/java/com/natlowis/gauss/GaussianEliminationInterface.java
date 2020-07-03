@@ -7,7 +7,7 @@ public interface GaussianEliminationInterface {
 
 	public int GCD(int[] integers) throws GCDException;
 
-	public Matrix GuassianElim(Matrix data) throws NoSolutionException;
+	public Matrix GaussianElim(Matrix data) throws NoSolutionException;
 
 	public String matrixToVariable(Matrix data);
 }

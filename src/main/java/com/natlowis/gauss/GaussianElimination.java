@@ -6,15 +6,17 @@ import java.util.Arrays;
 import org.apache.log4j.Logger;
 
 import com.natlowis.gauss.exceptions.GCDException;
+import com.natlowis.gauss.exceptions.IrrelevantEquationException;
 import com.natlowis.gauss.exceptions.NoSolutionException;
 
 public class GaussianElimination implements GaussianEliminationInterface {
 
 	private static final Logger logger = Logger.getLogger(GaussianElimination.class);
+	private boolean anyIrrelevant;
 
 	@Override
 	public int GCD(int[] integers) throws GCDException {
-		// TODO Auto-generated method stub
+
 		if (integers.length == 1) {
 			return integers[0];
 		} else {
@@ -26,22 +28,63 @@ public class GaussianElimination implements GaussianEliminationInterface {
 	}
 
 	@Override
-	public Matrix GuassianElim(Matrix data) throws NoSolutionException {
-		// TODO Auto-generated method stub
-		Matrix goneDown = GuassianElimDown(data, 0, 0);
-		return GuassianElimUp(goneDown, goneDown.rows() - 1, goneDown.columns() - 2);
+	public Matrix GaussianElim(Matrix data) throws NoSolutionException {
+
+		this.anyIrrelevant = false;
+		Matrix goneDown;
+		Matrix dataCopy = data.deepCopy();
+		try {
+			goneDown = GaussianElimDown(data, 0, 0);
+			return GaussianElimUp(goneDown, goneDown.rows() - 1, goneDown.columns() - 2);
+		} catch (NoSolutionException e) {
+
+			throw e;
+		} catch (IrrelevantEquationException e) {
+			int[][] newData = dataCopy.matrix();
+			int[][] newDataForMatrix = new int[newData.length - 1][newData[0].length];
+			for (int i = 0; i < newData.length - 1; i++) {
+				for (int j = 0; j < newData[0].length; j++) {
+					int dataToMove = newData[i][j];
+					newDataForMatrix[i][j] = dataToMove;
+				}
+			}
+			Matrix newMatrix = new Matrix(newDataForMatrix);
+			try {
+				goneDown = GaussianElimDown(newMatrix, 0, 0);
+				return GaussianElimUp(goneDown, goneDown.rows() - 1, goneDown.columns() - 3);
+			} catch (NoSolutionException e1) {
+
+				throw e1;
+			} catch (IrrelevantEquationException e1) {
+
+				e1.printStackTrace();
+			}
+		}
+		return null;
+
 	}
 
-	public Matrix GuassianElimDown(Matrix data, int line, int col) throws NoSolutionException {
-		// TODO Auto-generated method stub
+	public Matrix GaussianElimDown(Matrix data, int line, int col)
+			throws NoSolutionException, IrrelevantEquationException {
 		if (line + 1 == data.rows()) {
 			int[] dataForRow = data.row(line);
 			int b = dataForRow[dataForRow.length - 1];
 			if (b == 0) {
-				//TODO This is for Special CaSE 2
-				return data;}
-			else {
-				Boolean allZero = true; 
+				// TODO This is for Special CaSE 2
+				Boolean allZero = true;
+				for (int i = 0; i < dataForRow.length - 1; i++) {
+					if (dataForRow[i] != 0) {
+						allZero = false;
+					}
+				}
+				if (allZero) {
+					this.anyIrrelevant = true;
+					throw new IrrelevantEquationException();
+				} else {
+					return data;
+				}
+			} else {
+				Boolean allZero = true;
 				for (int i = 0; i < dataForRow.length - 1; i++) {
 					if (dataForRow[i] != 0) {
 						allZero = false;
@@ -49,8 +92,7 @@ public class GaussianElimination implements GaussianEliminationInterface {
 				}
 				if (allZero) {
 					throw new NoSolutionException();
-				}
-				else {
+				} else {
 					return data;
 				}
 			}
@@ -69,7 +111,7 @@ public class GaussianElimination implements GaussianEliminationInterface {
 					}
 				}
 				if (posistion == -1) {
-					return null;
+					col = col + 1;
 				} else {
 					int[] dataToMove = data.row(posistion);
 					data.add(posistion, data.row(line));
@@ -81,36 +123,42 @@ public class GaussianElimination implements GaussianEliminationInterface {
 
 			for (int i = 1; i < colOfData; i++) {
 				int indexOfRow = i + line;
-				int dataBelow = data.data(indexOfRow, col);
-				int[] rowOfData = new int[data.row(indexOfRow).length - col];
-				for (int j = col; j < data.row(indexOfRow).length; j++) {
-					int dataToChange = data.data(indexOfRow, j);
-					int dataToSub = data.data(line, j);
-					int newData = (initialData * dataToChange) - (dataBelow * dataToSub);
-					rowOfData[j - col] = newData;
-					// data.add(indexOfRow, j, newData);
+				try {
+					int dataBelow = data.data(indexOfRow, col);
+					int[] rowOfData = new int[data.row(indexOfRow).length - col];
+					for (int j = col; j < data.row(indexOfRow).length; j++) {
+						int dataToChange = data.data(indexOfRow, j);
+						int dataToSub = data.data(line, j);
+						int newData = (initialData * dataToChange) - (dataBelow * dataToSub);
+						rowOfData[j - col] = newData;
+						// data.add(indexOfRow, j, newData);
+
+					}
+					int hcf = 0;
+					try {
+						hcf = GCD(rowOfData);
+					} catch (GCDException e) {
+						hcf = 1;
+					}
+					for (int k = 0; k < rowOfData.length; k++) {
+						int dataToChange = rowOfData[k];
+						int dataToAdd = dataToChange / hcf;
+						data.add(indexOfRow, col + k, dataToAdd);
+					}
 				}
 
-				int hcf = 0;
-				try {
-					hcf = GCD(rowOfData);
-				} catch (GCDException e) {
-					hcf = 1;
-				}
-				for (int k = 0; k < rowOfData.length; k++) {
-					int dataToChange = rowOfData[k];
-					int dataToAdd = dataToChange / hcf;
-					data.add(indexOfRow, col + k, dataToAdd);
+				catch (ArrayIndexOutOfBoundsException e) {
+					;
 				}
 
 			}
 			line++;
 			col++;
-			return GuassianElimDown(data, line, col);
+			return GaussianElimDown(data, line, col);
 		}
 	}
 
-	public Matrix GuassianElimUp(Matrix data, int line, int col) {
+	public Matrix GaussianElimUp(Matrix data, int line, int col) {
 		if (line == 0) {
 
 			for (int i = 0; i < data.rows(); i++) {
@@ -141,8 +189,25 @@ public class GaussianElimination implements GaussianEliminationInterface {
 			}
 			return data;
 		} else {
-			int initialData = data.data(line, col);
-			
+			int initialData = 0;
+			if (this.anyIrrelevant) {
+				int[] row = data.row(line);
+				for (int i = 1; i < row.length - 1; i++) {
+					if (row[i] > 0 && row[i - 1] == 0) {
+						initialData = row[i];
+						col = i;
+					}
+				}
+				this.anyIrrelevant = false;
+			} else {
+				int[] row = data.row(line);
+				while (row[col - 1] != 0) {
+					col--;
+				}
+				initialData = data.data(line, col);
+				
+			}
+
 			for (int i = line - 1; i >= 0; i--) {
 				ArrayList<Integer> dataToUseForHCF = new ArrayList<Integer>();
 				int dataAbove = data.data(i, col);
@@ -163,7 +228,7 @@ public class GaussianElimination implements GaussianEliminationInterface {
 				} catch (GCDException e) {
 					hcf = 1;
 				}
-				
+
 				for (int j = data.columns() - 1; j > -1; j--) {
 					int dataToChange = data.data(i, j);
 
@@ -175,7 +240,7 @@ public class GaussianElimination implements GaussianEliminationInterface {
 
 			line--;
 			col--;
-			return GuassianElimUp(data, line, col);
+			return GaussianElimUp(data, line, col);
 		}
 		// TODO Need to go up the thing
 	}

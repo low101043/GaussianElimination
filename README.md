@@ -1,3 +1,9 @@
 # Guassian Elimination
 
-This is a program which performs Guassian Elimination.  It was started in December 2019.  Needs to be tested and checked.  I do not believe that the actual Guassian Elimination works.
+This is a program which performs Guassian Elimination.  It was started in December 2019.  
+
+Still a prototype.  
+
+The test file includes all the tests I have used.  Uses Junit 4
+
+
