@@ -311,4 +311,59 @@ public class MatrixTest {
 		
 		assertArrayEquals(answer3, f.matrix());
 	}
+	
+	@Test
+	public void extra_tests() throws NoSolutionException {
+		GaussianEliminationInterface elim = new GaussianElimination();
+		
+		int[][] data1 = {
+						{1,-3,-2},
+						{2,2,4},
+						};
+		Matrix a = new Matrix(data1);
+		Matrix b = elim.GaussianElim(a);
+		int[][] answer1 = {
+							{1,0,1},
+							{0,1,1}
+							};
+		
+		assertArrayEquals(answer1, b.matrix());
+		
+		////////////////////////////////////////////////////////////////////////////////////////////
+		
+		int[][] data2 = {
+						{0,-1,-1,0,1},
+						{2,1,-1,0,3},
+						{1,-1,0,-1,-1}
+						};
+		Matrix c = new Matrix(data2);
+		Matrix d = elim.GaussianElim(c);
+		int[][] answer2 = {
+							{-2,0,0,1,0},
+							{0,2,0,1,2},
+							{0,0,-2,1,4}
+							};
+		
+		assertArrayEquals(answer2, d.matrix());
+		/////////////////////////////////////////////////////////////////////////////////////////
+		
+	}
+	
+	@Test(expected=NoSolutionException.class)
+	public void no_solution_test_3() throws NoSolutionException {
+		
+		GaussianEliminationInterface elim = new GaussianElimination();
+		
+		int[][] data1 = {
+						{2,-1,0,-3,2},
+						{3,0,-3,-3,-1},
+						{-1,1,-1,2,0}
+						};
+		Matrix a = new Matrix(data1);
+		Matrix b = elim.GaussianElim(a);
+		
+		int[][] answer = {{1}};
+		
+		assertArrayEquals(answer, b.matrix());
+	}
 }

@@ -9,5 +9,4 @@ public interface GaussianEliminationInterface {
 
 	public Matrix GaussianElim(Matrix data) throws NoSolutionException;
 
-	public String matrixToVariable(Matrix data);
 }

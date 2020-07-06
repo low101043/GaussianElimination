@@ -103,7 +103,7 @@ public class GaussianElimination implements GaussianEliminationInterface {
 			if (initialData == 0) {
 				int[] colOfData = Arrays.copyOfRange(data.col(col), line, data.columns() - 1);
 
-				int posistion = -1;
+				int posistion = -1;   //TODO MUST REDO
 				for (int i = 0; i < colOfData.length; i++) {
 					logger.trace(colOfData[i]);
 					if (colOfData[i] != 0) {
@@ -245,11 +245,6 @@ public class GaussianElimination implements GaussianEliminationInterface {
 		// TODO Need to go up the thing
 	}
 
-	@Override
-	public String matrixToVariable(Matrix data) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private int gcd(int a, int b) throws GCDException {
 		if (b == 0) {
